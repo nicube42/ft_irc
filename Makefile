@@ -1,16 +1,19 @@
 NAME		=	ft_irc
 
 SRC			=	srcs/main.cpp \
-				srcs/server/Server.cpp
+				srcs/server/Server.cpp \
+				srcs/users/Users.cpp \
+				srcs/channels/Channels.cpp
 
-HEADERS		=	includes/server/Server.hpp
+
+HEADERS		=	includes/*.hpp
 
 OBJ			=	$(SRC:srcs/%.cpp=objs/%.o)
 
 CC			=	g++
 RM			=	rm -f
 
-CPPFLAGS	=	-Wall -Wextra -Werror -std=c++98 -pedantic
+CPPFLAGS	=	-Wall -Wextra -Werror -std=c++98 -pedantic -fsanitize=address
 
 OBJDIR		=	objs/
 
@@ -25,6 +28,8 @@ objs/%.o:		srcs/%.cpp $(HEADERS)
 dirs:
 				mkdir -p $(OBJDIR)
 				mkdir -p objs/server/
+				mkdir -p objs/users/
+				mkdir -p objs/channels/
 
 clean:
 				$(RM) -r $(OBJDIR)

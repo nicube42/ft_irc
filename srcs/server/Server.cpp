@@ -6,11 +6,13 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 11:28:30 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/03 14:35:46 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/04 19:22:58 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../includes/server/Server.hpp"
+#include "../../includes/Server.hpp"
+#include "../../includes/Users.hpp"
+#include "../../includes/Channels.hpp"
 
 Server::Server(int port, std::string password) : _port(port), _password(password)
 {
@@ -53,17 +55,48 @@ bool Server::setup()
 	return (true);
 }
 
-void Server::broadcastMessage(const char* message, int except_fd = -1)
+void Server::ensureChannelExists(const std::string& channelName)
 {
-	std::string init = "Message received: ";
-	std::string msg = init + message + "\n";
-	message = msg.c_str();
-	for (size_t i = 1; i < _fds.size(); ++i)
+	for (size_t i = 0; i < _channels.size(); ++i)
 	{
-		if (_fds[i].fd != except_fd)
-			send(_fds[i].fd, message, strlen(message), 0);
+		if (_channels[i].getName() == channelName) {
+			return;
+		}
 	}
+	Channels newChannel(channelName);
+	_channels.push_back(newChannel);
 }
+
+
+void Server::handleNewConnection(int client_socket)
+{
+	Users newUser(client_socket);
+
+	_users.push_back(newUser);
+
+	struct pollfd user_fd;
+	user_fd.fd = client_socket;
+	user_fd.events = POLLIN;
+	_users.back().setFd(user_fd);
+
+	srand(time(NULL));
+	std::stringstream nickname;
+	nickname << "User" << rand();
+	_users.back().setNickname(nickname.str());
+
+	ensureChannelExists("Welcome");
+	_channels[0].addUser(&_users.back());
+}
+
+void Server::handleMessage(int userIndex, const char* message)
+{
+	std::list<Users>::iterator it = _users.begin();
+	std::advance(it, userIndex);
+
+	if (it != _users.end())
+		_channels[0].broadcastMessage(message, *it);
+}
+
 
 void Server::run()
 {
@@ -72,48 +105,57 @@ void Server::run()
 
 	while (true)
 	{
-		int ret = poll(_fds.data(), _fds.size(), TIMEOUT);
+		std::list<struct pollfd> fds;
+		fds.push_back(_fds.front());
+		for (std::list<Users>::iterator it = _users.begin(); it != _users.end(); ++it)
+			fds.push_back(it->getFd());
+
+		std::vector<struct pollfd> fds_vector(fds.begin(), fds.end());
+
+		int ret = poll(&fds_vector[0], fds_vector.size(), TIMEOUT);
 
 		if (ret < 0)
 		{
 			std::cerr << RED << "Poll error!" << RESET << std::endl;
 			break;
 		}
-		else
+		else if (ret > 0)
 		{
-			if (_fds[0].revents & POLLIN)
+			// Accept new connection and handle it
+			if (fds_vector[0].revents & POLLIN)
 			{
-				//stock new client connection
 				int client_socket = accept(_server_fd, (struct sockaddr *)&_address, (socklen_t*)&_addrlen);
 				if (client_socket >= 0)
 				{
 					fcntl(client_socket, F_SETFL, O_NONBLOCK);
-					
 					std::cout << GREEN << "New client connected" << RESET << std::endl;
-					struct pollfd new_client_fd;
-					new_client_fd.fd = client_socket;
-					new_client_fd.events = POLLIN;
-					_fds.push_back(new_client_fd);
+					handleNewConnection(client_socket);
 				}
 			}
-			for (size_t i = 1; i < _fds.size(); i++)
+
+			// Handle events for each user
+			for (size_t i = 1; i < fds.size(); i++)
 			{
-				//handle messages from clients
-				if (_fds[i].revents & POLLIN)
+				if (fds_vector[i].revents & POLLIN)
 				{
 					char buffer[1024] = {0};
-					int valread = recv(_fds[i].fd, buffer, sizeof(buffer), 0);
+					int valread = recv(fds_vector[i].fd, buffer, sizeof(buffer), 0);
 					if (valread > 0)
 					{
 						buffer[valread] = '\0';
 						std::cout << "Message Received: " << buffer << std::endl;
-						broadcastMessage(buffer, _fds[i].fd);
+						handleMessage(i - 1, buffer);
 					}
-					else
+					else if (valread == 0)
 					{
-						std::cout << RED << "Client disconnected or error" << RESET << std::endl;
-						close(_fds[i].fd);
-						_fds.erase(_fds.begin() + i);
+						std::cout << RED << "Client disconnected" << RESET << std::endl;
+						close(fds_vector[i].fd);
+
+						std::list<Users>::iterator it = _users.begin();
+						std::advance(it, i - 1);
+
+						if (it != _users.end())
+							_users.erase(it);
 						i--;
 					}
 				}
@@ -122,11 +164,12 @@ void Server::run()
 	}
 }
 
+
 Server::~Server()
 {
-	for (size_t i = 0; i < _fds.size(); ++i)
+	for (std::list<struct pollfd>::iterator it = _fds.begin(); it != _fds.end(); ++it)
 	{
-		if (_fds[i].fd != -1)
-			close(_fds[i].fd);
+		if (it->fd != -1)
+			close(it->fd);
 	}
 }

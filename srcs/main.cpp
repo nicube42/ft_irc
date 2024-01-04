@@ -1,4 +1,4 @@
-#include "../includes/server/Server.hpp"
+#include "../includes/Server.hpp"
 
 int	argv_parse(int ac)
 {

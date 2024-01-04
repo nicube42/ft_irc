@@ -6,7 +6,7 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 11:28:27 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/03 14:32:53 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/04 19:16:34 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,12 @@
 #include <fcntl.h>
 #include <poll.h>
 #include <vector>
+#include <list>
+#include <cstdlib>
+#include <ctime>
+#include <sstream>
+#include "Users.hpp"
+#include "Channels.hpp"
 
 #define TIMEOUT 3000
 
@@ -43,7 +49,9 @@ class Server
 		std::string 				_password;
 		struct sockaddr_in			_address;
 		int							_addrlen;
-		std::vector<struct pollfd>	_fds;
+		std::list<struct pollfd>	_fds;
+		std::vector<Channels>		_channels;
+		std::list<Users>			_users;
 
 	public:
 
@@ -51,6 +59,9 @@ class Server
 		~Server(void);
 
 		bool	setup(void);
+		void	ensureChannelExists(const std::string& channelName);
+		void	handleNewConnection(int client_socket);
+		void	handleMessage(int userIndex, const char* message);
 		void	run(void);
 		void	broadcastMessage(const char* message, int except_fd);
 };
