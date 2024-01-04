@@ -6,7 +6,7 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:16:43 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/04 19:08:41 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/04 19:36:28 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,14 @@
 # define CHANNELS_HPP
 
 #pragma once
+
+#define RESET   "\033[0m"
+#define BLACK   "\033[30m"
+#define RED     "\033[31m"
+#define GREEN   "\033[32m"
+#define BLUE	"\033[0;34m"
+#define MAG		"\033[0;35m"
+#define CYN 	"\033[0;36m"
 
 #include <iostream>
 #include <list>

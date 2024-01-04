@@ -6,7 +6,7 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 11:28:30 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/04 19:22:58 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/04 19:34:52 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ bool Server::setup()
 			std::cerr << RED << "Failed to set non-blocking mode" << RESET << std::endl;
 			return (false);
 	}
-	//prepare poll and stock fds
+	//prepare poll and stock fd server
 	struct pollfd server_fd_struct;
 	server_fd_struct.fd = _server_fd;
 	server_fd_struct.events = POLLIN;

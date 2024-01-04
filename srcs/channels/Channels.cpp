@@ -6,7 +6,7 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:19:14 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/04 19:23:35 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/04 19:38:06 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@ Channels::Channels(const std::string &name) : _name(name)
 
 void Channels::addUser(Users *user)
 {
-	if (!user) return;
+	if (!user)
+		return;
 
 	for (std::list<Users*>::iterator it = _users.begin(); it != _users.end(); ++it)
 	{
@@ -26,6 +27,15 @@ void Channels::addUser(Users *user)
 		return;
 	}
 	_users.push_back(user);
+	std::string welcomeMessage = GREEN + user->getNickname() + " has joined the channel\n" + RESET;
+	for (std::list<Users*>::iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		Users* user = *it;
+		{
+			int fd = user->getFd().fd;
+			send(fd, welcomeMessage.c_str(), welcomeMessage.size() + 1, 0);
+		}
+	}
 }
 
 void Channels::removeUser(Users *user)
