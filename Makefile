@@ -3,8 +3,12 @@ NAME		=	ft_irc
 SRC			=	srcs/main.cpp \
 				srcs/server/Server.cpp \
 				srcs/users/Users.cpp \
-				srcs/channels/Channels.cpp
-
+				srcs/channels/Channels.cpp \
+				srcs/commands/parseCommands.cpp \
+				srcs/commands/join.cpp \
+				srcs/commands/nick.cpp \
+				srcs/commands/oper.cpp \
+				srcs/commands/kick.cpp \
 
 HEADERS		=	includes/*.hpp
 
@@ -30,6 +34,7 @@ dirs:
 				mkdir -p objs/server/
 				mkdir -p objs/users/
 				mkdir -p objs/channels/
+				mkdir -p objs/commands/
 
 clean:
 				$(RM) -r $(OBJDIR)

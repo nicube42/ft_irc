@@ -6,7 +6,7 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 11:28:27 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/04 19:16:34 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/05 15:00:59 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ class Server
 		struct sockaddr_in			_address;
 		int							_addrlen;
 		std::list<struct pollfd>	_fds;
-		std::vector<Channels>		_channels;
+		std::list<Channels>			_channels;
 		std::list<Users>			_users;
 
 	public:
@@ -64,6 +64,11 @@ class Server
 		void	handleMessage(int userIndex, const char* message);
 		void	run(void);
 		void	broadcastMessage(const char* message, int except_fd);
+		
+		
+		Channels*	getChannelByName(const std::string& name);
+		std::string	getPassword(void);
+		Users*		getUserByNickname(std::string& nickname);
 };
 
 #endif

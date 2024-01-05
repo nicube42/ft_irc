@@ -6,7 +6,7 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:19:14 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/04 19:38:06 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/05 14:38:45 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ void Channels::addUser(Users *user)
 		return;
 	}
 	_users.push_back(user);
-	std::string welcomeMessage = GREEN + user->getNickname() + " has joined the channel\n" + RESET;
+	std::string welcomeMessage = GREEN + user->getNickname() + " joined the channel\n" + RESET;
 	for (std::list<Users*>::iterator it = _users.begin(); it != _users.end(); ++it)
 	{
 		Users* user = *it;
@@ -40,7 +40,16 @@ void Channels::addUser(Users *user)
 
 void Channels::removeUser(Users *user)
 {
-    _users.remove(user);
+	std::string quitMessage = RED + user->getNickname() + " left the channel\n" + RESET;
+	for (std::list<Users*>::iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		Users* user = *it;
+		{
+			int fd = user->getFd().fd;
+			send(fd, quitMessage.c_str(), quitMessage.size() + 1, 0);
+		}
+	}
+	_users.remove(user);
 }
 
 void Channels::broadcastMessage(const std::string &message, Users &sender)
@@ -60,4 +69,17 @@ void Channels::broadcastMessage(const std::string &message, Users &sender)
 const std::string &Channels::getName() const
 {
 	return (_name);
+}
+
+Users	*Channels::getUserByName(std::string name) const
+{
+	for (std::list<Users*>::const_iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		Users* user = *it;
+		if (user->getNickname() == name)
+		{
+			return (user);
+		}
+	}
+	return (NULL);
 }

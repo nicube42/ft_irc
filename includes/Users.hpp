@@ -6,7 +6,7 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:18:30 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/04 17:26:17 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/05 14:16:42 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,8 +19,11 @@
 #include <string>
 #include <algorithm>
 #include <poll.h>
+#include "Channels.hpp"
 
 #pragma once
+
+class Channels;
 
 class Users
 {
@@ -28,6 +31,8 @@ class Users
 		std::string _nickname;
 		int			_socket;
 		struct pollfd	_fd;
+		Channels*		_currentChannel;
+		bool				_isOperator;
 	
 	public:
 		Users(const int &socket);
@@ -36,9 +41,14 @@ class Users
 		int	getSocket() const;
 		std::string		getNickname() const;
 		struct pollfd	getFd() const;
+		Channels*		getCurrentChannel() const;
 
 		void			setFd(struct pollfd fd);
 		void			setNickname(const std::string &nickname);
+		void			setCurrentChannel(Channels* channel);
+
+		bool			isOperator() const;
+		void			setOperator(bool isOperator);
 
 };
 

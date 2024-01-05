@@ -6,13 +6,15 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 11:28:30 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/04 19:34:52 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/05 15:01:54 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/Server.hpp"
 #include "../../includes/Users.hpp"
 #include "../../includes/Channels.hpp"
+
+int parseCommands(const char* message, Users *sender, Server *server);
 
 Server::Server(int port, std::string password) : _port(port), _password(password)
 {
@@ -57,9 +59,10 @@ bool Server::setup()
 
 void Server::ensureChannelExists(const std::string& channelName)
 {
-	for (size_t i = 0; i < _channels.size(); ++i)
+	for (std::list<Channels>::iterator it = _channels.begin(); it != _channels.end(); ++it)
 	{
-		if (_channels[i].getName() == channelName) {
+		if (it->getName() == channelName)
+		{
 			return;
 		}
 	}
@@ -67,11 +70,9 @@ void Server::ensureChannelExists(const std::string& channelName)
 	_channels.push_back(newChannel);
 }
 
-
 void Server::handleNewConnection(int client_socket)
 {
 	Users newUser(client_socket);
-
 	_users.push_back(newUser);
 
 	struct pollfd user_fd;
@@ -85,7 +86,13 @@ void Server::handleNewConnection(int client_socket)
 	_users.back().setNickname(nickname.str());
 
 	ensureChannelExists("Welcome");
-	_channels[0].addUser(&_users.back());
+
+	Channels* welcomeChannel = getChannelByName("Welcome");
+	if(welcomeChannel)
+	{
+		welcomeChannel->addUser(&_users.back());
+		_users.back().setCurrentChannel(welcomeChannel);
+	}
 }
 
 void Server::handleMessage(int userIndex, const char* message)
@@ -94,9 +101,12 @@ void Server::handleMessage(int userIndex, const char* message)
 	std::advance(it, userIndex);
 
 	if (it != _users.end())
-		_channels[0].broadcastMessage(message, *it);
+	{
+		if (parseCommands(message, &(*it), this) == 1)
+			return;
+		it->getCurrentChannel()->broadcastMessage(message, *it);
+	}
 }
-
 
 void Server::run()
 {
@@ -150,12 +160,14 @@ void Server::run()
 					{
 						std::cout << RED << "Client disconnected" << RESET << std::endl;
 						close(fds_vector[i].fd);
-
 						std::list<Users>::iterator it = _users.begin();
 						std::advance(it, i - 1);
 
 						if (it != _users.end())
+						{
+							it->getCurrentChannel()->removeUser(&(*it));
 							_users.erase(it);
+						}
 						i--;
 					}
 				}
@@ -164,7 +176,6 @@ void Server::run()
 	}
 }
 
-
 Server::~Server()
 {
 	for (std::list<struct pollfd>::iterator it = _fds.begin(); it != _fds.end(); ++it)
@@ -172,4 +183,32 @@ Server::~Server()
 		if (it->fd != -1)
 			close(it->fd);
 	}
+}
+
+Channels* Server::getChannelByName(const std::string& name)
+{
+	for (std::list<Channels>::iterator it = _channels.begin(); it != _channels.end(); ++it)
+	{
+		if (it->getName() == name)
+			return &(*it);
+	}
+	return NULL;
+}
+
+std::string Server::getPassword(void)
+{
+	return (_password);
+}
+
+Users*		Server::getUserByNickname(std::string& nickname)
+{
+	for (std::list<Users>::iterator it = _users.begin(); it != _users.end(); ++it)
+	{
+		Users* user = &(*it);
+		if (user->getNickname() == nickname)
+		{
+			return (user);
+		}
+	}
+	return (NULL);
 }
