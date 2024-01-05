@@ -6,7 +6,7 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:18:30 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/05 14:16:42 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/05 15:10:08 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,10 @@ class Channels;
 class Users
 {
 	private:
-		std::string _nickname;
-		int			_socket;
-		struct pollfd	_fd;
-		Channels*		_currentChannel;
+		std::string 		_nickname;
+		int					_socket;
+		struct pollfd		_fd;
+		Channels*			_currentChannel;
 		bool				_isOperator;
 	
 	public:

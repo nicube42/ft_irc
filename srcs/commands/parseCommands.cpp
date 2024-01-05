@@ -6,7 +6,7 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 12:00:56 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/05 14:31:27 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/05 15:16:29 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ void handleJoinCommand(const char* message, Users *sender, Server *server);
 void handleNickCommand(const char* message, Users *sender, Server *server);
 void handleOperCommand(const char* message, Users *sender, Server *server);
 void handleKickCommand(const char* message, Users *sender, Server *server);
+void handleInviteCommand(const char* message, Users *sender, Server *server);
 
 
 enum CommandType
@@ -70,7 +71,7 @@ int parseCommands(const char* message, Users *sender, Server *server)
 			handleKickCommand(message, sender, server);
 			break;
 		case INVITE:
-
+			handleInviteCommand(message, sender, server);
 			break;
 		case TOPIC:
 

@@ -9,6 +9,7 @@ SRC			=	srcs/main.cpp \
 				srcs/commands/nick.cpp \
 				srcs/commands/oper.cpp \
 				srcs/commands/kick.cpp \
+				srcs/commands/invite.cpp \
 
 HEADERS		=	includes/*.hpp
 
