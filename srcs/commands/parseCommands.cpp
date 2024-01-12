@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parseCommands.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ndiamant <ndiamant@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 12:00:56 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/05 15:16:29 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/08 19:03:00 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,15 @@ void handleNickCommand(const char* message, Users *sender, Server *server);
 void handleOperCommand(const char* message, Users *sender, Server *server);
 void handleKickCommand(const char* message, Users *sender, Server *server);
 void handleInviteCommand(const char* message, Users *sender, Server *server);
-
+void handlePartCommand(const char* message, Users *sender, Server *server);
+void handleQuitCommand(const char* message, Users *sender, Server *server);
+void handleTopicCommand(const char* message, Users *sender, Server *server);
+void handleModeCommand(const char* message, Users *sender, Server *server);
+void handleUserCommand(const char* message, Users *sender, Server *server);
+void handlePassCommand(const char* message, Users *sender, Server *server);
+void handleMessageCommand(const char* message, Users *sender, Server *server);
+void handlePingCommand(const char* message, Users *sender, Server *server);
+void handleNoticeCommand(const char* message, Users *sender, Server *server);
 
 enum CommandType
 {
@@ -32,7 +40,13 @@ enum CommandType
 	JOIN,
 	NICK,
 	OPER,
-	QUIT
+	QUIT,
+	PART,
+	USER,
+	PASS,
+	PRIVMSG,
+	PING,
+	NOTICE
 };
 
 CommandType checkIrcCommand(const char* message)
@@ -45,6 +59,12 @@ CommandType checkIrcCommand(const char* message)
 	else if (std::strncmp(message, "NICK", 4) == 0) return NICK;
 	else if (std::strncmp(message, "OPER", 4) == 0) return OPER;
 	else if (std::strncmp(message, "QUIT", 4) == 0) return QUIT;
+	else if (std::strncmp(message, "PART", 4) == 0) return PART;
+	else if (std::strncmp(message, "USER", 4) == 0) return USER;
+	else if (std::strncmp(message, "PASS", 4) == 0) return PASS;
+	else if (std::strncmp(message, "PRIVMSG", 7) == 0) return PRIVMSG;
+	else if (std::strncmp(message, "PING", 4) == 0) return PING;
+	else if (std::strncmp(message, "NOTICE", 6) == 0) return NOTICE;
 
 	return UNKNOWN;
 }
@@ -65,21 +85,38 @@ int parseCommands(const char* message, Users *sender, Server *server)
 			handleOperCommand(message, sender, server);
 			break;
 		case QUIT:
-			
+			handleQuitCommand(message, sender, server);
 			break;
 		case KICK:
 			handleKickCommand(message, sender, server);
+			break;
+		case PART:
+			handlePartCommand(message, sender, server);
 			break;
 		case INVITE:
 			handleInviteCommand(message, sender, server);
 			break;
 		case TOPIC:
-
+			handleTopicCommand(message, sender, server);
 			break;
 		case MODE:
-
+			handleModeCommand(message, sender, server);
 			break;
-
+		case USER:
+			handleUserCommand(message, sender, server);
+			break;
+		case PASS:
+			handlePassCommand(message, sender, server);
+			break;
+		case PRIVMSG:
+			handleMessageCommand(message, sender, server);
+			break;
+		case PING:
+			handlePingCommand(message, sender, server);
+			break;
+		case NOTICE:
+			handleNoticeCommand(message, sender, server);
+			break;
 		default:
 			return (0);
 	}

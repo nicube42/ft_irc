@@ -10,6 +10,15 @@ SRC			=	srcs/main.cpp \
 				srcs/commands/oper.cpp \
 				srcs/commands/kick.cpp \
 				srcs/commands/invite.cpp \
+				srcs/commands/part.cpp \
+				srcs/commands/topic.cpp \
+				srcs/commands/mode.cpp \
+				srcs/commands/user.cpp \
+				srcs/commands/pass.cpp \
+				srcs/commands/message.cpp \
+				srcs/commands/ping.cpp \
+				srcs/commands/notice.cpp \
+				srcs/commands/quit.cpp \
 
 HEADERS		=	includes/*.hpp
 
@@ -18,7 +27,7 @@ OBJ			=	$(SRC:srcs/%.cpp=objs/%.o)
 CC			=	g++
 RM			=	rm -f
 
-CPPFLAGS	=	-Wall -Wextra -Werror -std=c++98 -pedantic -fsanitize=address
+CPPFLAGS	=	-Wall -Wextra -Werror -std=c++98 -pedantic
 
 OBJDIR		=	objs/
 

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ndiamant <ndiamant@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 11:28:30 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/05 15:01:54 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/08 19:34:08 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,9 +85,9 @@ void Server::handleNewConnection(int client_socket)
 	nickname << "User" << rand();
 	_users.back().setNickname(nickname.str());
 
-	ensureChannelExists("Welcome");
+	ensureChannelExists("#Welcome");
 
-	Channels* welcomeChannel = getChannelByName("Welcome");
+	Channels* welcomeChannel = getChannelByName("#Welcome");
 	if(welcomeChannel)
 	{
 		welcomeChannel->addUser(&_users.back());

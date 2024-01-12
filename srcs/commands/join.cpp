@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ndiamant <ndiamant@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 12:13:07 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/05 14:55:20 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/08 19:37:08 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,11 @@
 void handleJoinCommand(const char* message, Users *sender, Server *server)
 {
 	std::string channelName = message + 5;
+	if (channelName[0] != '#')
+	{
+		// error code
+		return;
+	}
 	if (!channelName.empty() && channelName[channelName.length() - 1] == '\n')
 		channelName.erase(channelName.length() - 1);
 	Channels* channel = server->getChannelByName(channelName);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channels.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ndiamant <ndiamant@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:19:14 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/05 14:38:45 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/08 19:41:14 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,12 @@ void Channels::removeUser(Users *user)
 
 void Channels::broadcastMessage(const std::string &message, Users &sender)
 {
-	std::string formattedMessage = sender.getNickname() + ": " + message;
+	std::string formattedMessage;
+
+	if (sender.isOperator() == false)
+		formattedMessage = BLUE + sender.getNickname() + RESET + ": " + message;
+	else
+		formattedMessage = RED + sender.getNickname() + RESET + ": " + message;
 	for (std::list<Users*>::iterator it = _users.begin(); it != _users.end(); ++it)
 	{
 		Users* user = *it;
@@ -82,4 +87,14 @@ Users	*Channels::getUserByName(std::string name) const
 		}
 	}
 	return (NULL);
+}
+
+void Channels::setTopic(const std::string &topic)
+{
+	_topic = topic;
+}
+
+const std::string &Channels::getTopic() const
+{
+	return (_topic);
 }
