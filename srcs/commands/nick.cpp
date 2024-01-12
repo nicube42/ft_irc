@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   nick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndiamant <ndiamant@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 13:53:30 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/08 18:58:10 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/12 15:00:59 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,4 +21,6 @@ void handleNickCommand(const char* message, Users *sender, Server *server)
 	if (!nickname.empty() && nickname[nickname.length() - 1] == '\n')
 		nickname.erase(nickname.length() - 1);
 	sender->setNickname(nickname);
+	if (sender->getUsername() != "default")
+		sender->setRegistered(true);
 }

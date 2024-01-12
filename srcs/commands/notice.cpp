@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   notice.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndiamant <ndiamant@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 19:02:33 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/08 19:10:35 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/12 12:22:37 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,7 @@
 
 void handleNoticeCommand(const char* message, Users *sender, Server *server)
 {
-    (void) message;
-    (void) sender;
-    (void) server;
+	(void) message;
+	(void) sender;
+	(void) server;
 }

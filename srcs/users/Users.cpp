@@ -6,13 +6,13 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:19:06 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/05 14:18:40 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/12 15:03:46 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/Users.hpp"
 
-Users::Users(const int &socket) : _nickname("default"), _socket(socket), _isOperator(false)
+Users::Users(const int &socket) : _nickname("default"), _username("default"), _realname("default"), _socket(socket), _isOperator(false)
 {
 	_fd.fd = -1;
 	_fd.events = 0;
@@ -68,4 +68,35 @@ bool	Users::isOperator() const
 void	Users::setOperator(bool isOperator)
 {
 	_isOperator = isOperator;
+}
+
+bool	Users::isRegistered() const
+{
+	return (_isRegistered);
+}
+
+bool	Users::setRegistered(bool isRegistered)
+{
+	_isRegistered = isRegistered;
+	return (_isRegistered);
+}
+
+void	Users::setUsername(const std::string &username)
+{
+	_username = username;
+}
+
+void	Users::setRealname(const std::string &realname)
+{
+	_realname = realname;
+}
+
+std::string	Users::getUsername() const
+{
+	return (_username);
+}
+
+std::string	Users::getRealname() const
+{
+	return (_realname);
 }

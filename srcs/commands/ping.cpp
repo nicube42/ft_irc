@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ping.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndiamant <ndiamant@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 19:02:18 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/08 19:10:49 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/12 14:11:42 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,16 @@
 
 void handlePingCommand(const char* message, Users *sender, Server *server)
 {
-    (void) message;
-    (void) sender;
-    (void) server;
+	(void)	server;
+	std::string fullMessage(message);
+
+	std::size_t spacePos = fullMessage.find(' ');
+	if (spacePos != std::string::npos)
+	{
+		std::string serverIdentifier = fullMessage.substr(spacePos + 1);
+
+		std::string pongResponse = "PONG " + serverIdentifier + "\r\n";
+
+		send(sender->getSocket(), pongResponse.c_str(), pongResponse.size(), 0);
+	}
 }

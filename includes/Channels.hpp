@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channels.hpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndiamant <ndiamant@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:16:43 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/08 19:40:56 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/12 12:15:43 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,9 +36,9 @@ class Users;
 class Channels
 {
 private:
-	std::string 		_name;
-	std::list<Users *>	_users;
-	std::string 		_topic;
+	std::string 			_name;
+	std::list<Users *>		_users;
+	std::string 			_topic;
 
 public:
 	Channels(const std::string &name);

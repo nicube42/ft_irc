@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   topic.cpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndiamant <ndiamant@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 18:54:54 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/08 19:52:28 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/12 15:03:04 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,9 @@
 
 void handleTopicCommand(const char* message, Users *sender, Server *server)
 {
+	(void)message;
+	(void)sender;
+	(void)server;
     std::string channel;
     std::string topic;
 
