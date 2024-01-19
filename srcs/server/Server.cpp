@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndiamant <ndiamant@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 11:28:30 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/08 19:34:08 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/16 13:20:36 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,6 +107,19 @@ void Server::handleMessage(int userIndex, const char* message)
 		it->getCurrentChannel()->broadcastMessage(message, *it);
 	}
 }
+
+// void	Server::sendServerRpl(int const client_fd, std::string client_buffer)
+// {
+// 	std::istringstream	buf(client_buffer);
+// 	std::string			reply;
+	
+// 	send(client_fd, client_buffer.c_str(), client_buffer.size(), 0);
+// 	while (getline(buf, reply))
+// 	{
+// 		std::cout << "[Server] Message sent to client " \
+// 				  << client_fd << "       >> " << CYAN << reply << RESET << std::endl;
+// 	}
+// }
 
 void Server::run()
 {
