@@ -6,7 +6,7 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/16 13:04:38 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/24 12:07:20 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 15:19:10 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 # define user_id(nickname, username) (":" + nickname + "!" + username + "@localhost")
 
 # define ERR_NOTREGISTERED(client) (":localhost 451 " + client + " :You have not registered\r\n")
+# define ERR_ALREADYREGISTRED(client) (":localhost 462 " + client + " :Unauthorized command (already registered)\r\n")
 
 # define RPL_WELCOME(user_id, nickname) (":localhost 001 " + nickname + " :Welcome to the Internet Relay Network " + user_id + "\r\n")
 # define RPL_YOURHOST(client, servername, version) (":localhost 002 " + client + " :Your host is " + servername + " (localhost), running version " + version + "\r\n")

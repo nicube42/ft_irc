@@ -6,13 +6,14 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 14:08:40 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/16 13:00:40 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 15:17:23 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/Users.hpp"
 #include "../../includes/Server.hpp"
 #include "../../includes/Channels.hpp"
+#include "../../includes/replies.hpp"
 
 
 /*
@@ -63,7 +64,7 @@ RFC 1459              Internet Relay Chat Protocol              May 1993
    Numeric Replies:
 
            ERR_NEEDMOREPARAMS              RPL_YOUREOPER
-           ERR_NOOPERHOST                  ERR_PASSWDMISMATCH
+           ERR_NOOPERHOST                  ERR_NEEDMOREPARAMS
 
    Example:
 
@@ -80,14 +81,17 @@ void handleOperCommand(const char* message, Users *sender, Server *server)
 	
 	if (!(iss >> command >> username >> password))
 	{
-		// Invalid format
+		send(sender->getSocket(), ERR_NEEDMOREPARAMS(std::to_string(sender->getSocket()), "OPER").c_str(),
+			ERR_NEEDMOREPARAMS(std::to_string(sender->getSocket()), "OPER").length(), 0);
 		return;
 	}
 	if (password != server->getPassword())
 	{
-		// Invalid password
+		send(sender->getSocket(), ERR_PASSWDMISMATCH(std::to_string(sender->getSocket())).c_str(),
+			ERR_PASSWDMISMATCH(std::to_string(sender->getSocket())).length(), 0);
 		return;
 	}
-	send(sender->getSocket(), GREEN "New operator\n" RESET, 23, 0);
+	send(sender->getSocket(), RPL_YOUREOPER(std::to_string(sender->getSocket())).c_str(),
+		RPL_YOUREOPER(std::to_string(sender->getSocket())).length(), 0);
 	server->getUserByNickname(username)->setOperator(true);
 }
