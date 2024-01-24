@@ -10,3 +10,21 @@ So now, if you follow us, you should guess that, for each client, you will need 
 
 
 nc send message : "message ctrlv + ctrlm + enter"
+
+COMMANDS :
+
+- cap: functionality OK | replies OK						OK
+- invite: functionality KO | replies KO						KO
+- join: functionality GOOD START | replies GOOD START		KO
+- kick: functionality KO | replies KO						KO
+- message: functionality OK | replies GOOD START			KO
+- mode: functionality KO | replies KO						KO
+- nick: functionality OK | replies GOOD START				KO
+- notice: functionality KO | replies KO						KO
+- oper; functionality OK | replies GOOD START				KO
+- part: functionality KO | replies KO						KO
+- pass: functionality GOOD START | replies KO				KO
+- ping: functionality OK | replies OK						OK
+- quit: functionality KO | replies KO						KO
+- topic: functionality KO | replies KO						KO
+- user: functionality OK | replies OK						OK
