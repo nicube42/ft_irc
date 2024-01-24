@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ndiamant <ndiamant@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 11:28:27 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/16 13:20:43 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:54:11 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ class Server
 		~Server(void);
 
 		bool	setup(void);
-		void	ensureChannelExists(const std::string& channelName);
+		void	ensureChannelExists(const std::string& channelName, Users *creator);
 		void	handleNewConnection(int client_socket);
 		void	handleMessage(int userIndex, const char* message);
 		void	run(void);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   join.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ndiamant <ndiamant@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 12:13:07 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/24 14:55:55 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:54:01 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,7 +84,7 @@ void handleJoinCommand(const char* message, Users *sender, Server *server)
 	Channels* channel = server->getChannelByName(channelName);
 	if (!channel)
 	{
-		server->ensureChannelExists(channelName);
+		server->ensureChannelExists(channelName, sender);
 		channel = server->getChannelByName(channelName);
 	}
 	if (sender->getCurrentChannel())

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ndiamant <ndiamant@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 11:28:30 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/24 14:02:08 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:53:46 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,7 @@ bool Server::setup()
 	return (true);
 }
 
-void Server::ensureChannelExists(const std::string& channelName)
+void Server::ensureChannelExists(const std::string& channelName, Users* creator)
 {
 	for (std::list<Channels>::iterator it = _channels.begin(); it != _channels.end(); ++it)
 	{
@@ -67,6 +67,7 @@ void Server::ensureChannelExists(const std::string& channelName)
 		}
 	}
 	Channels newChannel(channelName);
+	newChannel.setOperator(creator);
 	_channels.push_back(newChannel);
 }
 

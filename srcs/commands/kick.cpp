@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   kick.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ndiamant <ndiamant@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 14:30:08 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/16 14:13:40 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 19:05:42 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,12 +63,7 @@ void handleKickCommand(const char* message, Users *sender, Server *server)
 	{
 		send(sender->getSocket(), ERR_NEEDMOREPARAMS(sender->getNickname(), command).c_str(),
 			ERR_NEEDMOREPARAMS(sender->getNickname(), command).length(), 0);
-		return;
-	}
-	if (!sender->isOperator())
-	{
-		send(sender->getSocket(), ERR_CHANOPRIVSNEEDED(sender->getNickname(), channelName).c_str(),
-			ERR_CHANOPRIVSNEEDED(sender->getNickname(), channelName).length(), 0);
+		std::cout << "Not enough parameters" << std::endl;
 		return;
 	}
 	Channels* channel = server->getChannelByName(channelName);
@@ -76,6 +71,7 @@ void handleKickCommand(const char* message, Users *sender, Server *server)
 	{
 		send(sender->getSocket(), ERR_NOSUCHCHANNEL(sender->getNickname(), channelName).c_str(),
 			ERR_NOSUCHCHANNEL(sender->getNickname(), channelName).length(), 0);
+		std::cout << "Channel does not exist" << std::endl;
 		return;
 	}
 	Users* user = channel->getUserByName(username);
@@ -83,8 +79,18 @@ void handleKickCommand(const char* message, Users *sender, Server *server)
 	{
 		send(sender->getSocket(), ERR_USERNOTINCHANNEL(sender->getNickname(), username, channelName).c_str(), 
 			ERR_USERNOTINCHANNEL(sender->getNickname(), username, channelName).length(), 0);
+		std::cout << "User not in channel" << std::endl;
+		return;
+	}
+	if (channel->getOperator() != sender)
+	{
+		send(sender->getSocket(), ERR_CHANOPRIVSNEEDED(sender->getNickname(), channelName).c_str(),
+			ERR_CHANOPRIVSNEEDED(sender->getNickname(), channelName).length(), 0);
+		std::cout << "Not operator" << std::endl;
 		return;
 	}
 	channel->removeUser(user);
 	user->setCurrentChannel(nullptr);
+	send(sender->getSocket(), RPL_KICK(sender->getNickname(), channelName, username, "u suck").c_str(),
+		RPL_KICK(sender->getNickname(), channelName, username, "u suck").length(), 0);
 }

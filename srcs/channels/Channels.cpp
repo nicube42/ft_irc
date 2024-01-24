@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channels.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ndiamant <ndiamant@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:19:14 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/24 14:42:10 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:53:23 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,4 +93,14 @@ void Channels::setTopic(const std::string &topic)
 const std::string &Channels::getTopic() const
 {
 	return (_topic);
+}
+
+const Users *Channels::getOperator() const
+{
+	return (_channel_operator);
+}
+
+void Channels::setOperator(const Users *operatorName)
+{
+	_channel_operator = const_cast<Users *>(operatorName);
 }

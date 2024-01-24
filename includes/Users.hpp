@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Users.hpp                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
+/*   By: ndiamant <ndiamant@student.42lausanne.c    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:18:30 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/12 15:00:04 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 18:39:02 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,6 +36,8 @@ class Users
 		Channels*			_currentChannel;
 		bool				_isOperator;
 		bool				_isRegistered;
+		std::string			_mode;
+
 	
 	public:
 		Users(const int &socket);
@@ -58,8 +60,6 @@ class Users
 		void			setOperator(bool isOperator);
 		bool			isRegistered() const;
 		bool			setRegistered(bool isRegistered);
-
-		
 
 };
 
