@@ -6,13 +6,13 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:19:14 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/12 12:32:50 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 14:42:10 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/Channels.hpp"
 
-Channels::Channels(const std::string &name) : _name(name)
+Channels::Channels(const std::string &name) : _name(name), _topic("default")
 {
 }
 
@@ -54,19 +54,15 @@ void Channels::removeUser(Users *user)
 
 void Channels::broadcastMessage(const std::string &message, Users &sender)
 {
-	std::string formattedMessage;
+	std::string formattedMessage = ":" + sender.getNickname() + " PRIVMSG " + getName() + " :" + message + "\r\n";
 
-	if (sender.isOperator() == false)
-		formattedMessage = BLUE + sender.getNickname() + RESET + ": " + message;
-	else
-		formattedMessage = RED + sender.getNickname() + RESET + ": " + message;
 	for (std::list<Users*>::iterator it = _users.begin(); it != _users.end(); ++it)
 	{
 		Users* user = *it;
 		if (user != &sender)
 		{
 			int fd = user->getFd().fd;
-			send(fd, formattedMessage.c_str(), formattedMessage.size() + 1, 0);
+			send(fd, formattedMessage.c_str(), formattedMessage.size(), 0);
 		}
 	}
 }

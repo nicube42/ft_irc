@@ -6,13 +6,14 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/04 11:19:06 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/12 15:03:46 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 12:44:38 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/Users.hpp"
 
-Users::Users(const int &socket) : _nickname("default"), _username("default"), _realname("default"), _socket(socket), _isOperator(false)
+Users::Users(const int &socket) : _nickname("default"), _username("default"), _realname("default"),
+	_socket(socket), _currentChannel(NULL), _isOperator(false), _isRegistered(false)
 {
 	_fd.fd = -1;
 	_fd.events = 0;
@@ -21,6 +22,7 @@ Users::Users(const int &socket) : _nickname("default"), _username("default"), _r
 
 Users::~Users(void)
 {
+	_isRegistered = false;
 }
 
 int	Users::getSocket() const

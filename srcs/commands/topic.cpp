@@ -6,7 +6,7 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 18:54:54 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/16 13:03:00 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 14:40:58 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,27 +51,27 @@ void handleTopicCommand(const char* message, Users *sender, Server *server)
 	(void)message;
 	(void)sender;
 	(void)server;
-    std::string channel;
-    std::string topic;
+	std::string channel;
+	std::string topic;
 
-    std::istringstream iss(message);
-    iss >> channel >> topic;
+	std::istringstream iss(message);
+	iss >> channel >> topic;
 	if (!channel.empty() && channel[channel.length() - 1] == '\n')
 		channel.erase(channel.length() - 1);
 	if (!topic.empty() && topic[topic.length() - 1] == '\n')
 		topic.erase(topic.length() - 1);
-    if (topic.empty())
-    {
+	if (topic.empty())
+	{
 		std::string toSend = server->getChannelByName(channel)->getTopic() + "\n";
 		send(sender->getSocket(), toSend.c_str(), toSend.size() + 1, 0);
 		std::cout << server->getChannelByName(channel)->getTopic() << std::endl;
-    }
+	}
 	else if (topic == "-")
 	{
 		server->getChannelByName(channel)->setTopic("");
-    }
+	}
 	else
 	{
 		server->getChannelByName(channel)->setTopic(topic);
-    }
+	}
 }

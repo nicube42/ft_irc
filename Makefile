@@ -19,6 +19,7 @@ SRC			=	srcs/main.cpp \
 				srcs/commands/ping.cpp \
 				srcs/commands/notice.cpp \
 				srcs/commands/quit.cpp \
+				srcs/commands/cap.cpp \
 
 HEADERS		=	includes/*.hpp
 

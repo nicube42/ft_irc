@@ -6,7 +6,7 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 18:58:29 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/16 13:01:35 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 13:36:37 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,4 @@ void handlePassCommand(const char* message, Users *sender, Server *server)
 		send(sender->getSocket(), errMsg.c_str(), errMsg.size(), 0);
 		return;
 	}
-
-	// If the password is correct, set the user as registered
-	sender->setRegistered(true);
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parseCommands.cpp                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ndiamant <ndiamant@student.42lausanne.c    +#+  +:+       +#+        */
+/*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 12:00:56 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/08 19:03:00 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 14:34:38 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,7 @@
 #include <cstring>
 #include "../../includes/Server.hpp"
 #include "../../includes/Users.hpp"
+#include "../../includes/replies.hpp"
 
 void handleJoinCommand(const char* message, Users *sender, Server *server);
 void handleNickCommand(const char* message, Users *sender, Server *server);
@@ -29,6 +30,7 @@ void handlePassCommand(const char* message, Users *sender, Server *server);
 void handleMessageCommand(const char* message, Users *sender, Server *server);
 void handlePingCommand(const char* message, Users *sender, Server *server);
 void handleNoticeCommand(const char* message, Users *sender, Server *server);
+void handleCapCommand(const char* message, Users *sender, Server *server);
 
 enum CommandType
 {
@@ -46,7 +48,8 @@ enum CommandType
 	PASS,
 	PRIVMSG,
 	PING,
-	NOTICE
+	NOTICE,
+	CAP
 };
 
 CommandType checkIrcCommand(const char* message)
@@ -65,6 +68,7 @@ CommandType checkIrcCommand(const char* message)
 	else if (std::strncmp(message, "PRIVMSG", 7) == 0) return PRIVMSG;
 	else if (std::strncmp(message, "PING", 4) == 0) return PING;
 	else if (std::strncmp(message, "NOTICE", 6) == 0) return NOTICE;
+	else if (std::strncmp(message, "CAP", 3) == 0) return CAP;
 
 	return UNKNOWN;
 }
@@ -76,7 +80,15 @@ int parseCommands(const char* message, Users *sender, Server *server)
 	switch(cmdType)
 	{
 		case JOIN:
-			handleJoinCommand(message, sender, server);
+			if (sender->isRegistered() == false)
+			{
+				send(sender->getSocket(), ERR_NOTREGISTERED(sender->getNickname()).c_str(), 
+					ERR_NOTREGISTERED(sender->getNickname()).length(), 0);
+			}
+			else
+			{
+				handleJoinCommand(message, sender, server);
+			}
 			break;
 		case NICK:
 			handleNickCommand(message, sender, server);
@@ -116,6 +128,9 @@ int parseCommands(const char* message, Users *sender, Server *server)
 			break;
 		case NOTICE:
 			handleNoticeCommand(message, sender, server);
+			break;
+		case CAP:
+			handleCapCommand(message, sender, server);
 			break;
 		default:
 			return (0);

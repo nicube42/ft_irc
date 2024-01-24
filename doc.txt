@@ -7,3 +7,6 @@ This is not the case with nc : you will have to concatenate the messages sent by
 
 So now, if you follow us, you should guess that, for each client, you will need a (send) buffer as well! This will be very efficient in taking care of the CTRL+Z signal 😇 . Don't forget to also check the POLLIN and POLLOUT revents in your server loop...
 
+
+
+nc send message : "message ctrlv + ctrlm + enter"

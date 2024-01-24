@@ -6,7 +6,7 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/05 12:13:07 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/16 13:30:20 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 14:55:55 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,10 +65,18 @@ RFC 1459              Internet Relay Chat Protocol              May 1993
 
 void handleJoinCommand(const char* message, Users *sender, Server *server)
 {
+	std::string joinMessage(message);
+	if (joinMessage.length() <= 6)
+	{
+		send(sender->getSocket(), ERR_NEEDMOREPARAMS(sender->getNickname(), "JOIN").c_str(), 
+			ERR_NEEDMOREPARAMS(sender->getNickname(), "JOIN").length(), 0);
+		return;
+	}
 	std::string channelName = message + 5;
 	if (channelName[0] != '#')
 	{
-		// error code
+		send(sender->getSocket(), ERR_NOSUCHCHANNEL(sender->getNickname(), channelName).c_str(), 
+			ERR_NOSUCHCHANNEL(sender->getNickname(), channelName).length(), 0);
 		return;
 	}
 	if (!channelName.empty() && channelName[channelName.length() - 1] == '\n')
@@ -85,4 +93,6 @@ void handleJoinCommand(const char* message, Users *sender, Server *server)
 	sender->getCurrentChannel()->addUser(sender);
 	send(sender->getSocket(), RPL_JOIN(sender->getNickname(), channelName).c_str(), 
 		RPL_JOIN(sender->getNickname(), channelName).length(), 0);
+	send(sender->getSocket(), RPL_TOPIC(sender->getNickname(), channelName, channel->getTopic()).c_str(), 
+		RPL_TOPIC(sender->getNickname(), channelName, channel->getTopic()).length(), 0);
 }

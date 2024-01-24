@@ -6,7 +6,7 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 18:42:49 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/16 13:01:09 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 15:12:13 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,7 +45,7 @@ RFC 1459              Internet Relay Chat Protocol              May 1993
 
 void handlePartCommand(const char* message, Users *sender, Server *server)
 {
-    (void) message;
-    (void) sender;
-    (void) server;
+	(void) message;
+	(void) sender;
+	(void) server;
 }

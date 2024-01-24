@@ -6,7 +6,7 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 18:59:42 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/16 12:47:34 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 14:53:32 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,35 +50,43 @@ void handleMessageCommand(const char* message, Users *sender, Server *server)
 
 	std::string privmsg = message;
 	std::istringstream iss(privmsg);
-	std::string command, destination, content;
+	std::string command, destination;
 	int isUser = 1;
 	int isChannel = 1;
 	
-	if (!(iss >> command >> destination >> content))
+	if (!(iss >> command >> destination))
 	{
 		// Invalid format
 		return;
+	}
+	iss.ignore();
+
+	std::string content;
+	std::getline(iss, content);
+
+	if (!content.empty() && content[0] == ':')
+	{
+		content.erase(0, 1);
 	}
 	Channels* channel = server->getChannelByName(destination);
 	if (!channel)
 	{
 		isChannel = 0;
-		// Invalid channel
 	}
 	Users* user = server->getUserByNickname(destination);
 	if (user == NULL)
 	{
 		isUser = 0;
-		// Invalid user
 	}
 	if (isUser)
 	{
-		std::string formattedMessage = CYN + sender->getNickname() + " messaged you" + RESET + ": " + content + "\n";
+		std::string formattedMessage = CYN + sender->getNickname() + " messaged you" + RESET + ": " + content + "\r\n";
 		send(user->getSocket(), formattedMessage.c_str(), formattedMessage.size() + 1, 0);
+		return;
 	}
 	if (isChannel)
 	{
-		std::string formattedMessage = CYN "messaged the channel" RESET ": " + content + "\n";
-		channel->broadcastMessage(formattedMessage, *sender);
+		channel->broadcastMessage(content, *sender);
+		return;
 	}
 }

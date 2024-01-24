@@ -6,13 +6,14 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/08 18:57:28 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/16 13:03:39 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 13:37:04 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../includes/Users.hpp"
 #include "../../includes/Server.hpp"
 #include "../../includes/Channels.hpp"
+#include "../../includes/replies.hpp"
 
 /*
       Command: USER
@@ -83,6 +84,11 @@ void handleUserCommand(const char* message, Users *sender, Server *server)
 	// Set user details
 	sender->setUsername(username);
 	sender->setRealname(realname);
-	if (sender->getNickname() != "default")
+	if (sender->isRegistered() == false && sender->getNickname() != "default" && sender->getUsername() != "default")
+	{
 		sender->setRegistered(true);
+		std::cout << "User registered" << std::endl;
+	}
+	send(sender->getSocket(), RPL_WELCOME(sender->getUsername(), sender->getNickname()).c_str(), 
+		RPL_WELCOME(sender->getUsername(), sender->getNickname()).length(), 0);
 }

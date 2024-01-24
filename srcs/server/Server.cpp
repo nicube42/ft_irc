@@ -6,7 +6,7 @@
 /*   By: ndiamant <ndiamant@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/01/03 11:28:30 by ndiamant          #+#    #+#             */
-/*   Updated: 2024/01/16 13:20:36 by ndiamant         ###   ########.fr       */
+/*   Updated: 2024/01/24 14:02:08 by ndiamant         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -84,15 +84,6 @@ void Server::handleNewConnection(int client_socket)
 	std::stringstream nickname;
 	nickname << "User" << rand();
 	_users.back().setNickname(nickname.str());
-
-	ensureChannelExists("#Welcome");
-
-	Channels* welcomeChannel = getChannelByName("#Welcome");
-	if(welcomeChannel)
-	{
-		welcomeChannel->addUser(&_users.back());
-		_users.back().setCurrentChannel(welcomeChannel);
-	}
 }
 
 void Server::handleMessage(int userIndex, const char* message)
@@ -104,25 +95,16 @@ void Server::handleMessage(int userIndex, const char* message)
 	{
 		if (parseCommands(message, &(*it), this) == 1)
 			return;
-		it->getCurrentChannel()->broadcastMessage(message, *it);
+		if (it->getCurrentChannel())
+			it->getCurrentChannel()->broadcastMessage(message, *it);
 	}
 }
 
-// void	Server::sendServerRpl(int const client_fd, std::string client_buffer)
-// {
-// 	std::istringstream	buf(client_buffer);
-// 	std::string			reply;
-	
-// 	send(client_fd, client_buffer.c_str(), client_buffer.size(), 0);
-// 	while (getline(buf, reply))
-// 	{
-// 		std::cout << "[Server] Message sent to client " \
-// 				  << client_fd << "       >> " << CYAN << reply << RESET << std::endl;
-// 	}
-// }
-
 void Server::run()
 {
+	char buffer[1024] = {0};
+	std::string incompleteMessage;
+
 	std::cout << GREEN << "Server is running on port " << _port << RESET << std::endl;
 	_addrlen = sizeof(struct sockaddr_in);
 
@@ -161,13 +143,22 @@ void Server::run()
 			{
 				if (fds_vector[i].revents & POLLIN)
 				{
-					char buffer[1024] = {0};
-					int valread = recv(fds_vector[i].fd, buffer, sizeof(buffer), 0);
+					int valread = recv(fds_vector[i].fd, buffer, sizeof(buffer) - 1, 0);
 					if (valread > 0)
 					{
 						buffer[valread] = '\0';
-						std::cout << "Message Received: " << buffer << std::endl;
-						handleMessage(i - 1, buffer);
+						std::string messageData = incompleteMessage + std::string(buffer);
+						size_t pos = 0;
+						
+						while ((pos = messageData.find("\r\n")) != std::string::npos)
+						{
+							std::string fullMessage = messageData.substr(0, pos);
+							std::cout << "Message Received: " << fullMessage << std::endl;
+							handleMessage(i - 1, fullMessage.c_str());
+							messageData.erase(0, pos + 2);
+						}
+
+						incompleteMessage = messageData;
 					}
 					else if (valread == 0)
 					{
@@ -178,7 +169,8 @@ void Server::run()
 
 						if (it != _users.end())
 						{
-							it->getCurrentChannel()->removeUser(&(*it));
+							if (it->getCurrentChannel())
+								it->getCurrentChannel()->removeUser(&(*it));
 							_users.erase(it);
 						}
 						i--;
